@@ -1,0 +1,27 @@
+name: Taser
+author: Megamezzomixer
+version: 1.2
+main: de.megamezzomixer.Taser.Main
+commands:
+   taser:
+      description: Author and Copyright & Help
+      usage: /taser <args>
+permissions:
+  taser.*:
+    description: All access to all Taser commands
+    children:
+      taser.give: true
+      taser.reload: true
+      taser.use: true
+  taser.give:
+    description: Needed to receive a Taser via Command
+    default: op
+  taser.reload:
+    description: Reloads the config
+    default: op
+  taser.use:
+    description: Needed to use the Taser
+    default: op
+  taser.exempt:
+    description: Immunity against the taser
+    default: false
