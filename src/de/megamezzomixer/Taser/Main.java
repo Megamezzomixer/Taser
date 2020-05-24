@@ -168,6 +168,9 @@ public class Main extends JavaPlugin implements Listener {
   
     @EventHandler
     public void onEntityDamage(EntityDamageByEntityEvent e) {
+    	if(!(e.getEntity() instanceof Player)) {
+    		return;
+    	}
     		if(e.getDamager().hasMetadata("taser")){
     			if(tased.containsKey(e.getEntity().getName())){
     				return;
