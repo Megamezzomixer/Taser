@@ -42,6 +42,7 @@ public class Main extends JavaPlugin implements Listener {
   	this.getConfig().addDefault("General.onlyPlayerCommand", "&4This Command can only be done as a Player.");
   	this.getConfig().addDefault("General.notOnline", "&4This Player is not Online.");
   	this.getConfig().addDefault("Taser.enabled", true);
+  	this.getConfig().addDefault("Taser.itemMaterial", "Stick");
   	this.getConfig().addDefault("Taser.stunTime", 5);
   	this.getConfig().addDefault("Taser.taserShootCooldown", 2);
   	this.getConfig().addDefault("Taser.blindness", true);
@@ -55,7 +56,11 @@ public class Main extends JavaPlugin implements Listener {
   	this.getConfig().addDefault("Taser.addedToInv", "&2The Taser is added to your inventory.");
   	this.getConfig().options().copyDefaults(true);
   	saveConfig();
-  		
+  	Material mat = Material.matchMaterial(this.getConfig().getString("Taser.itemMaterial"));
+  	if(mat == null) {
+  		Log.error("[Taser] Invalid itemMaterial in config.yml! Please check if it's a VALID minecraft item name! Disablig plugin...");
+  		this.getPluginLoader().disablePlugin(this);
+  	}
   }
   
   @Override
@@ -93,7 +98,8 @@ public class Main extends JavaPlugin implements Listener {
     			sender.sendMessage(msg);
     			return true;
     		}else {
-    			ItemStack taserItem = new ItemStack(Material.STICK, 1);
+    			Material mat = Material.matchMaterial(this.getConfig().getString("Taser.itemMaterial"));
+    			ItemStack taserItem = new ItemStack(mat, 1);
     			ItemMeta meta = (ItemMeta) taserItem.getItemMeta();
     			List<String> lore = new ArrayList<String>();
     			lore.add(ChatColor.translateAlternateColorCodes('&', getConfig().getString("Taser.loreText")));
@@ -130,7 +136,8 @@ public class Main extends JavaPlugin implements Listener {
       Player p = e.getPlayer();
       if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK){ 
     	  int time = getConfig().getInt("Taser.taserShootCooldown");
-    	  if(!(e.getPlayer().getInventory().getItemInMainHand().getType() == Material.STICK)){
+    	  Material mat = Material.matchMaterial(this.getConfig().getString("Taser.itemMaterial"));
+    	  if(!(e.getPlayer().getInventory().getItemInMainHand().getType() == mat)){
     		  return;
     	  }
     	  if(!(e.getPlayer().getInventory().getItemInMainHand().getItemMeta().getDisplayName().equals("§6Taser") | e.getPlayer().getInventory().getItemInMainHand().getItemMeta().getDisplayName().equals("&#186;6Taser"))){
@@ -191,29 +198,9 @@ public class Main extends JavaPlugin implements Listener {
     			if(this.getConfig().getBoolean("Taser.sound"))
     			{
     			
-        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 2);
-        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 2);
-        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 2);
-        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
+    				for(int i = 0; i <= 20; i++) {
+    					w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
+    				}
     			}
     			if(this.getConfig().getBoolean("Taser.blindness"))
     			{
@@ -233,14 +220,15 @@ public class Main extends JavaPlugin implements Listener {
   
   @EventHandler
   public void onPlayerJoin(PlayerJoinEvent event) {
-    ItemStack taserItem = new ItemStack(Material.STICK, 1);
-    ItemMeta meta = taserItem.getItemMeta();
-    List<String> lore = new ArrayList<>();
-    lore.add(ChatColor.translateAlternateColorCodes('&', getConfig().getString("Taser.loreText")));
-    meta.setLore(lore);
-    meta.setDisplayName("");
-    taserItem.setItemMeta(meta);
-    event.getPlayer().getInventory().remove(taserItem);
+	  Material mat = Material.matchMaterial(this.getConfig().getString("Taser.itemMaterial"));
+	  ItemStack taserItem = new ItemStack(mat, 1);
+	  ItemMeta meta = taserItem.getItemMeta();
+	  List<String> lore = new ArrayList<>();
+	  lore.add(ChatColor.translateAlternateColorCodes('&', getConfig().getString("Taser.loreText")));
+	  meta.setLore(lore);
+	  meta.setDisplayName("");
+	  taserItem.setItemMeta(meta);
+	  event.getPlayer().getInventory().remove(taserItem);
   }
   
   @EventHandler
