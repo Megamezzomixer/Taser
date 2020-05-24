@@ -1,6 +1,6 @@
 name: Taser
 author: Megamezzomixer
-version: 1.2
+version: 1.7
 main: de.megamezzomixer.Taser.Main
 commands:
    taser:

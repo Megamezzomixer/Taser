@@ -1,4 +1,5 @@
 package de.megamezzomixer.Taser;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,39 +29,40 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class Main extends JavaPlugin implements Listener{
-	HashMap<String, Boolean> tased = new HashMap<String, Boolean>();
-	HashMap<String, Boolean> coolDown = new HashMap<String, Boolean>();
-	
-@Override
-public void onEnable(){
-		
-		Log.info("Taser by Megamezzomixer ENABLED");
-		getServer().getPluginManager().registerEvents(this, this);
-		this.getConfig().addDefault("General.onlyPlayerCommand", "&4This Command can only be done as a Player.");
-		this.getConfig().addDefault("General.notOnline", "&4This Player is not Online.");
-		this.getConfig().addDefault("Taser.enabled", true);
-		this.getConfig().addDefault("Taser.stunTime", 5);
-		this.getConfig().addDefault("Taser.taserShootCooldown", 2);
-		this.getConfig().addDefault("Taser.blindness", true);
-		this.getConfig().addDefault("Taser.sound", true);
-		this.getConfig().addDefault("Taser.gotStunnedMessage", "&4You are getting stunned");
-		this.getConfig().addDefault("Taser.taserEndMessage", "&2You can move again");
-		this.getConfig().addDefault("Taser.noPermission", "&4You don't know how to use the Taser. (No Permission)");
-		this.getConfig().addDefault("Taser.antiSpamMessage", "&4The Taser is charging up...");
-		this.getConfig().addDefault("Taser.disabledMessage", "&4The Taser is disabled.");
-		this.getConfig().addDefault("Taser.loreText", "&3Is used to stun people");
-		this.getConfig().addDefault("Taser.addedToInv", "&2The Taser is added to your inventory.");
-		this.getConfig().options().copyDefaults(true);
-	    saveConfig();
-		
-	}
-
-    @Override
-    public void onDisable(){
-    	Log.info("Taser by Megamezzomixer DISABLED");
-    }
-    
+public class Main extends JavaPlugin implements Listener {
+  HashMap<String, Boolean> tased = new HashMap<>();
+  
+  HashMap<String, Boolean> coolDown = new HashMap<>();
+  
+  @Override
+  public void onEnable(){
+  		
+  	Log.info("Taser by Megamezzomixer ENABLED");
+  	getServer().getPluginManager().registerEvents(this, this);
+  	this.getConfig().addDefault("General.onlyPlayerCommand", "&4This Command can only be done as a Player.");
+  	this.getConfig().addDefault("General.notOnline", "&4This Player is not Online.");
+  	this.getConfig().addDefault("Taser.enabled", true);
+  	this.getConfig().addDefault("Taser.stunTime", 5);
+  	this.getConfig().addDefault("Taser.taserShootCooldown", 2);
+  	this.getConfig().addDefault("Taser.blindness", true);
+  	this.getConfig().addDefault("Taser.sound", true);
+  	this.getConfig().addDefault("Taser.gotStunnedMessage", "&4You are getting stunned");
+  	this.getConfig().addDefault("Taser.taserEndMessage", "&2You can move again");
+  	this.getConfig().addDefault("Taser.noPermission", "&4You don't know how to use the Taser. (No Permission)");
+  	this.getConfig().addDefault("Taser.antiSpamMessage", "&4The Taser is charging up...");
+  	this.getConfig().addDefault("Taser.disabledMessage", "&4The Taser is disabled.");
+  	this.getConfig().addDefault("Taser.loreText", "&3Is used to stun people");
+  	this.getConfig().addDefault("Taser.addedToInv", "&2The Taser is added to your inventory.");
+  	this.getConfig().options().copyDefaults(true);
+  	saveConfig();
+  		
+  }
+  
+  @Override
+  public void onDisable(){
+  	Log.info("Taser by Megamezzomixer DISABLED");
+  }
+  
 	@Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
     	if(cmd.getName().equalsIgnoreCase("taser")){
@@ -122,7 +124,7 @@ public void onEnable(){
     }
     	return false;
     }
-	
+  
     @EventHandler
     public void onRightClick(PlayerInteractEvent e) {
       Player p = e.getPlayer();
@@ -148,7 +150,7 @@ public void onEnable(){
     		  
     	  p.launchProjectile(Snowball.class).setMetadata("taser", new FixedMetadataValue(this, true));
     	    World w = p.getWorld();
-    	    w.playSound(p.getLocation(), Sound.NOTE_STICKS, 10, 1);
+    	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 10, 1);
     	    coolDown.put(e.getPlayer().getName(), true);
 			this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
 				public void run() {
@@ -162,7 +164,8 @@ public void onEnable(){
     	  }
       }
   }
-    
+
+  
     @EventHandler
     public void onEntityDamage(EntityDamageByEntityEvent e) {
     		if(e.getDamager().hasMetadata("taser")){
@@ -173,7 +176,7 @@ public void onEnable(){
     			World w = p.getWorld();
     			if(p.hasPermission("taser.exempt"))
     			{
-    				w.playSound(p.getLocation(), Sound.FIZZ, 0.5F, 1);
+    				w.playSound(p.getLocation(), Sound.BLOCK_LAVA_EXTINGUISH, 0.5F, 1);
     				e.setCancelled(true);
     				return;
     			}
@@ -185,30 +188,29 @@ public void onEnable(){
     			if(this.getConfig().getBoolean("Taser.sound"))
     			{
     			
-        	    w.playSound(p.getLocation(), Sound.NOTE_SNARE_DRUM, 10, 2);
-        	    w.playSound(p.getLocation(), Sound.NOTE_SNARE_DRUM, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.NOTE_SNARE_DRUM, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.NOTE_SNARE_DRUM, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.NOTE_SNARE_DRUM, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.NOTE_SNARE_DRUM, 10, 2);
-        	    w.playSound(p.getLocation(), Sound.NOTE_SNARE_DRUM, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.NOTE_SNARE_DRUM, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.NOTE_SNARE_DRUM, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.NOTE_SNARE_DRUM, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.NOTE_SNARE_DRUM, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.NOTE_SNARE_DRUM, 10, 2);
-        	    w.playSound(p.getLocation(), Sound.NOTE_SNARE_DRUM, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.NOTE_SNARE_DRUM, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.NOTE_SNARE_DRUM, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.NOTE_SNARE_DRUM, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.NOTE_SNARE_DRUM, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.NOTE_SNARE_DRUM, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.NOTE_SNARE_DRUM, 10, 2);
-        	    w.playSound(p.getLocation(), Sound.NOTE_SNARE_DRUM, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.NOTE_SNARE_DRUM, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.NOTE_SNARE_DRUM, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.NOTE_SNARE_DRUM, 10, 1);
-        	    w.playSound(p.getLocation(), Sound.NOTE_SNARE_DRUM, 10, 1);
+        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
+        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
+        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
+        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
+        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 2);
+        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
+        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
+        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
+        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
+        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
+        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 2);
+        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
+        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
+        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
+        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
+        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
+        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
+        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 2);
+        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
+        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
+        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
+        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
+        	    w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_SNARE, 10, 1);
     			}
     			if(this.getConfig().getBoolean("Taser.blindness"))
     			{
@@ -225,33 +227,30 @@ public void onEnable(){
     			return;
     	}
     }
-    
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event)
-    {
-    	
-		ItemStack taserItem = new ItemStack(Material.STICK, 1);
-		ItemMeta meta = (ItemMeta) taserItem.getItemMeta();
-		List<String> lore = new ArrayList<String>();
-		lore.add(ChatColor.translateAlternateColorCodes('&', getConfig().getString("Taser.loreText")));
-		meta.setLore(lore);
-		meta.setDisplayName("§6Taser");
-		taserItem.setItemMeta(meta);
-		
-		event.getPlayer().getInventory().remove(taserItem);
-    }
-    
-    @EventHandler
-    public void onPlayerMove(PlayerMoveEvent e) {
-    	if(tased.containsKey(e.getPlayer().getName())){
-    		Location loc = e.getFrom();
-    		loc.setX(loc.getBlockX()+0.5);
-    		loc.setY(loc.getBlockY());
-    		loc.setZ(loc.getBlockZ()+0.5);
-    		if (!(e.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN).getType().equals(Material.AIR))) {
-    		e.getPlayer().teleport(loc);
-    		e.setCancelled(true);
-    		}
-    	}
-	}
+  
+  @EventHandler
+  public void onPlayerJoin(PlayerJoinEvent event) {
+    ItemStack taserItem = new ItemStack(Material.STICK, 1);
+    ItemMeta meta = taserItem.getItemMeta();
+    List<String> lore = new ArrayList<>();
+    lore.add(ChatColor.translateAlternateColorCodes('&', getConfig().getString("Taser.loreText")));
+    meta.setLore(lore);
+    meta.setDisplayName("");
+    taserItem.setItemMeta(meta);
+    event.getPlayer().getInventory().remove(taserItem);
+  }
+  
+  @EventHandler
+  public void onPlayerMove(PlayerMoveEvent e) {
+    if (this.tased.containsKey(e.getPlayer().getName())) {
+      Location loc = e.getFrom();
+      loc.setX(loc.getBlockX() + 0.5D);
+      loc.setY(loc.getBlockY());
+      loc.setZ(loc.getBlockZ() + 0.5D);
+      if (!e.getPlayer().getLocation().getBlock().getRelative(BlockFace.DOWN).getType().equals(Material.AIR)) {
+        e.getPlayer().teleport(loc);
+        e.setCancelled(true);
+      } 
+    } 
+  }
 }
