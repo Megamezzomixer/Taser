@@ -3,6 +3,7 @@ package de.megamezzomixer.Taser;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -12,7 +13,6 @@ import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.libs.jline.internal.Log;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
@@ -37,7 +37,7 @@ public class Main extends JavaPlugin implements Listener {
   @Override
   public void onEnable(){
   		
-  	Log.info("Taser by Megamezzomixer ENABLED");
+  	this.getLogger().log(Level.INFO, "Taser by Megamezzomixer ENABLED");
   	getServer().getPluginManager().registerEvents(this, this);
   	this.getConfig().addDefault("General.onlyPlayerCommand", "&4This Command can only be done as a Player.");
   	this.getConfig().addDefault("General.notOnline", "&4This Player is not Online.");
@@ -58,14 +58,14 @@ public class Main extends JavaPlugin implements Listener {
   	saveConfig();
   	Material mat = Material.matchMaterial(this.getConfig().getString("Taser.itemMaterial"));
   	if(mat == null) {
-  		Log.error("[Taser] Invalid itemMaterial in config.yml! Please check if it's a VALID minecraft item name! Disablig plugin...");
+  		this.getLogger().log(Level.WARNING, "[Taser] Invalid itemMaterial in config.yml! Please check if it's a VALID minecraft item name! Disablig plugin...");
   		this.getPluginLoader().disablePlugin(this);
   	}
   }
   
   @Override
   public void onDisable(){
-  	Log.info("Taser by Megamezzomixer DISABLED");
+    this.getLogger().log(Level.INFO, "Taser by Megamezzomixer DISABLED");
   }
   
 	@Override
