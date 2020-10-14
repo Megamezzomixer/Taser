@@ -14,6 +14,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -43,6 +44,7 @@ public class Main extends JavaPlugin implements Listener {
     this.getConfig().addDefault("General.notOnline", "&4This Player is not Online.");
     this.getConfig().addDefault("Taser.enabled", true);
     this.getConfig().addDefault("Taser.itemMaterial", "Stick");
+    this.getConfig().addDefault("Taser.rangeMultiplier", 1);
     this.getConfig().addDefault("Taser.stunTime", 5);
     this.getConfig().addDefault("Taser.taserShootCooldown", 2);
     this.getConfig().addDefault("Taser.blindness", true);
@@ -153,8 +155,16 @@ public class Main extends JavaPlugin implements Listener {
         return;
       }
       if (!(coolDown.containsKey(e.getPlayer().getName()))) {
-
-        p.launchProjectile(Snowball.class).setMetadata("taser", new FixedMetadataValue(this, true));
+        
+        Projectile projectile = p.launchProjectile(Snowball.class);
+        double velocityMultiplier = Math.abs(this.getConfig().getDouble("Taser.rangeMultiplier"));
+        if(velocityMultiplier > 2) {
+          velocityMultiplier = 2;
+        }
+        projectile.setVelocity(projectile.getVelocity().multiply(velocityMultiplier));
+        projectile.setMetadata("taser", new FixedMetadataValue(this, true));
+        //p.launchProjectile(Snowball.class).setMetadata("taser", new FixedMetadataValue(this, true));
+        
         World w = p.getWorld();
         w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 10, 1);
         coolDown.put(e.getPlayer().getName(), true);
