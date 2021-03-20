@@ -108,7 +108,7 @@ public class Main extends JavaPlugin implements Listener {
           List<String> lore = new ArrayList<String>();
           lore.add(ChatColor.translateAlternateColorCodes('&', getConfig().getString("Taser.loreText")));
           meta.setLore(lore);
-          meta.setDisplayName("ยง6Taser");
+          meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6Taser"));
           if(this.getConfig().getInt("Taser.customModelData") != 0) {
         	  meta.setCustomModelData(this.getConfig().getInt("Taser.customModelData"));
           }
@@ -145,7 +145,7 @@ public class Main extends JavaPlugin implements Listener {
       if (!(e.getPlayer().getInventory().getItemInMainHand().getType() == mat)) {
         return;
       }
-      if (!(e.getPlayer().getInventory().getItemInMainHand().getItemMeta().getDisplayName().equals("ยง6Taser")
+      if (!(e.getPlayer().getInventory().getItemInMainHand().getItemMeta().getDisplayName().equals("§6Taser")
           | e.getPlayer().getInventory().getItemInMainHand().getItemMeta().getDisplayName().equals("&#186;6Taser"))) {
         return;
       }
