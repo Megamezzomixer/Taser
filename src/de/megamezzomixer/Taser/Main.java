@@ -104,12 +104,11 @@ public class Main extends JavaPlugin implements Listener {
         } else {
           Material mat = Material.matchMaterial(this.getConfig().getString("Taser.itemMaterial"));
           ItemStack taserItem = new ItemStack(mat, 1);
-          taserItem.setData(null);
           ItemMeta meta = (ItemMeta) taserItem.getItemMeta();
           List<String> lore = new ArrayList<String>();
           lore.add(ChatColor.translateAlternateColorCodes('&', getConfig().getString("Taser.loreText")));
           meta.setLore(lore);
-          meta.setDisplayName("§6Taser");
+          meta.setDisplayName("ยง6Taser");
           if(this.getConfig().getInt("Taser.customModelData") != 0) {
         	  meta.setCustomModelData(this.getConfig().getInt("Taser.customModelData"));
           }
@@ -127,9 +126,9 @@ public class Main extends JavaPlugin implements Listener {
 
         if (sender.hasPermission("taser.reload") | sender.hasPermission("taser.*")) {
           reloadConfig();
-          sender.sendMessage("&2Config file reloaded.");
+          sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&2Config file reloaded."));
         } else {
-          sender.sendMessage("&c You have no permission to reload the config.");
+          sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c You have no permission to reload the config."));
         }
         return true;
       }
@@ -146,13 +145,13 @@ public class Main extends JavaPlugin implements Listener {
       if (!(e.getPlayer().getInventory().getItemInMainHand().getType() == mat)) {
         return;
       }
-      if (!(e.getPlayer().getInventory().getItemInMainHand().getItemMeta().getDisplayName().equals("§6Taser")
+      if (!(e.getPlayer().getInventory().getItemInMainHand().getItemMeta().getDisplayName().equals("ยง6Taser")
           | e.getPlayer().getInventory().getItemInMainHand().getItemMeta().getDisplayName().equals("&#186;6Taser"))) {
         return;
       }
       boolean taserEnabled = this.getConfig().getBoolean("Taser.enabled");
       if (taserEnabled == false) {
-        p.sendMessage("�cTaser is disabled.");
+        p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cTaser plugin is disabled"));
         return;
       }
       if (!p.hasPermission("taser.use") & !p.hasPermission("taser.*")) {
@@ -168,7 +167,6 @@ public class Main extends JavaPlugin implements Listener {
         }
         projectile.setVelocity(projectile.getVelocity().multiply(velocityMultiplier));
         projectile.setMetadata("taser", new FixedMetadataValue(this, true));
-        //p.launchProjectile(Snowball.class).setMetadata("taser", new FixedMetadataValue(this, true));
         
         World w = p.getWorld();
         w.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_HAT, 10, 1);
