@@ -56,6 +56,7 @@ public class Main extends JavaPlugin implements Listener {
     this.getConfig().addDefault("Taser.disabledMessage", "&4The Taser is disabled.");
     this.getConfig().addDefault("Taser.loreText", "&3Is used to stun people");
     this.getConfig().addDefault("Taser.addedToInv", "&2The Taser is added to your inventory.");
+    this.getConfig().addDefault("Taser.customModelData", 0);
     this.getConfig().options().copyDefaults(true);
     saveConfig();
     Material mat = Material.matchMaterial(this.getConfig().getString("Taser.itemMaterial"));
@@ -103,11 +104,15 @@ public class Main extends JavaPlugin implements Listener {
         } else {
           Material mat = Material.matchMaterial(this.getConfig().getString("Taser.itemMaterial"));
           ItemStack taserItem = new ItemStack(mat, 1);
+          taserItem.setData(null);
           ItemMeta meta = (ItemMeta) taserItem.getItemMeta();
           List<String> lore = new ArrayList<String>();
           lore.add(ChatColor.translateAlternateColorCodes('&', getConfig().getString("Taser.loreText")));
           meta.setLore(lore);
           meta.setDisplayName("§6Taser");
+          if(this.getConfig().getInt("Taser.customModelData") != 0) {
+        	  meta.setCustomModelData(this.getConfig().getInt("Taser.customModelData"));
+          }
           taserItem.setItemMeta(meta);
           Player p = (Player) sender;
           p.getInventory().addItem(taserItem);

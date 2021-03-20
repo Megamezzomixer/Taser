@@ -1,7 +1,8 @@
 name: Taser
 author: Megamezzomixer
-version: 1.7.3
+version: 1.7.4
 main: de.megamezzomixer.Taser.Main
+api-version: 1.16
 commands:
    taser:
       description: Author and Copyright & Help
